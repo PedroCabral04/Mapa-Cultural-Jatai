@@ -41,12 +41,12 @@ services:
     links:
       - redis
       - sessions
-#     - db
+      - db
       
     environment:  
       - REDIRECT_404_ASSETS_TO=
 
-      - BUILD_ASSETS=0
+      - BUILD_ASSETS=1
       - PENDING_PCACHE_RECREATION_INTERVAL=5
       - JOBS_INTERVAL=5
       - REDIS_CACHE=redis
@@ -57,7 +57,7 @@ services:
       - redis
       - sessions
 #     - mailhog
-#     - db
+      - db
 
     stdin_open: true
     tty: true
@@ -72,6 +72,18 @@ services:
     command: --maxmemory 128Mb --maxmemory-policy allkeys-lru
     volumes:
       - ./docker-data/sessions:/data
+
+  db: 
+   image: postgis/postgis:15-master
+   environment:
+     - POSTGRES_PASSWORD=mapas
+     - POSTGRES_USER=mapas
+     - POSTGRES_DB=mapas
+   ports:
+     - "5432:5432"
+   volumes:
+     - ./docker-data/postgres:/var/lib/postgresql/data
+     - ./db:/docker-entrypoint-initdb.d
 
 ############################################################################################################
 # Em caso de ativar este serviço 'mailhog', lembre de definir as seguintes variaveis no arquivo '.env':    #
@@ -92,14 +104,5 @@ services:
 #  DB_PASS=******* => senha de acesso ao banco de dados                                                    #
 #  DB_VERSION=N => numero da verso do servidor de banco de dados                                           #
 ############################################################################################################
-# db: # Detalhes sobre configuração deste serviço 'Postgres' disponível em <https://www.docker.com/blog/how-to-use-the-postgres-docker-official-image/>.
-#   image: postgis/postgis:14-master
-#   environment:
-#     - POSTGRES_PASSWORD=mapas
-#     - POSTGRES_USER=mapas
-#     - POSTGRES_DB=mapas
-#   ports:
-#     - "5432:5432"
-#   volumes:
-#     - ./docker-data/postgres:/var/lib/postgresql/data
-#     - ./db:/docker-entrypoint-initdb.d
+
+

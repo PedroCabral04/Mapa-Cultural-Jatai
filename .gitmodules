@@ -1,9 +1,3 @@
-[submodule "src/plugins/MultipleLocalAuth"]
-	path = src/plugins/MultipleLocalAuth
-	url = https://github.com/culturagovbr/plugin-MultipleLocalAuth.git
-[submodule "src/plugins/AdminLoginAsUser"]
-	path = src/plugins/AdminLoginAsUser
-	url = https://github.com/mapasculturais/plugin-AdminLoginAsUser.git
 [submodule "src/plugins/SpamDetector"]
 	path = src/plugins/SpamDetector
 	url = https://github.com/culturagovbr/plugin-SpamDetector.git
@@ -25,3 +19,24 @@
 [submodule "src/themes/Pnab"]
 	path = src/themes/Pnab
 	url = https://github.com/culturagovbr/theme-Pnab
+[submodule "plugins/MultipleLocalAuth"]
+	path = plugins/MultipleLocalAuth
+	url = https://github.com/mapasculturais/plugin-MultipleLocalAuth
+[submodule "plugins/AdminLoginAsUser"]
+	path = plugins/AdminLoginAsUser
+	url = https://github.com/mapasculturais/plugin-AdminLoginAsUser
+[submodule "plugins/RecreatePCacheOnLogin"]
+	path = plugins/RecreatePCacheOnLogin
+	url = https://github.com/mapasculturais/plugin-RecreatePCacheOnLogin
+[submodule "plugins/SpamDetector"]
+	path = plugins/SpamDetector
+	url = https://github.com/mapasculturais/plugin-SpamDetector
+[submodule "plugins/MapasBlame"]
+	path = plugins/MapasBlame
+	url = https://github.com/mapasculturais/plugin-MapasBlame
+[submodule "plugins/MetadataKeyword"]
+	path = plugins/MetadataKeyword
+	url = https://github.com/mapasculturais/plugin-MetadataKeyword
+[submodule "plugins/Metabase"]
+	path = plugins/Metabase
+	url = https://github.com/mapasculturais/plugin-Metabase

@@ -208,8 +208,12 @@ class Module extends \MapasCulturais\Module {
             }
 
 
-            if(preg_match('#[ ,\n]+#', $component) && ($components = preg_split('#[ ,\n]+#', $component))) {
+            if(preg_match('#[ ,\r\n]+#', $component) && ($components = preg_split('#[ ,\r\n]+#', $component))) {
                 foreach ($components as $component) {
+                    $component = trim($component);
+                    if ($component === '') {
+                        continue;
+                    }
                     $this->import($component, $data);
                 }
                 return;

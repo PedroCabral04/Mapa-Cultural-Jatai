@@ -36,10 +36,10 @@ case $i in
     	    echo "
 	restore-dump.sh [-u=postgres] [-f=dump.sql] [-db=mapasculturais] [-o=mapasculturais]
 
-	-u=  | --user= 		usuário que executará o comando (padrão: whoami)
-	-f=  | --filename=	arquivo de dump que deve ser importado. (padrão: dump.sql)
-	-db= | --database=	nome da base de dados de destino (padrão: mapasculturais)
-	-o=  | --owner=		owner da base que será criada (padrão: whoami)
+	-u=  | --user= 		usuÃ¡rio que executarÃ¡ o comando (padrÃ£o: whoami)
+	-f=  | --filename=	arquivo de dump que deve ser importado. (padrÃ£o: dump.sql)
+	-db= | --database=	nome da base de dados de destino (padrÃ£o: mapasculturais)
+	-o=  | --owner=		owner da base que serÃ¡ criada (padrÃ£o: whoami)
     	    "
     	    exit
     ;;
@@ -51,9 +51,9 @@ echo $CONFIRM;
 if [[ $CONFIRM != 'sim' ]]; then
     echo "
 =========================================================================================
-=================================== ATENÇÃO - CUIDADO ===================================
+=================================== ATENÃ‡ÃƒO - CUIDADO ===================================
 =========================================================================================
-ESTA OPERAÇÃO APAGARÁ O BANCO DE DADOS ATUAL E RECUPERARÁ A VERSÃO DO ARQUIVO $FILE
+ESTA OPERAÃ‡ÃƒO APAGARÃ O BANCO DE DADOS ATUAL E RECUPERARÃ A VERSÃƒO DO ARQUIVO $FILE
 
 
 PARA CONTINUAR ESCREVA 'sim': "

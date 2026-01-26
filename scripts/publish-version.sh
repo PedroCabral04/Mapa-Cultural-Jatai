@@ -1,44 +1,44 @@
-## Script para gerar nova versão na branch de produção a partir de uma branch estável ##
+## Script para gerar nova versÃ£o na branch de produÃ§Ã£o a partir de uma branch estÃ¡vel ##
 
 exibir_uso_correto() {
     echo "Usar: $0 <versao> [versao_producao] [versao_candidata]"
     echo "Onde:"
-    echo "  <versao_producao> indentificador da versão a publicar."
+    echo "  <versao_producao> indentificador da versÃ£o a publicar."
     echo "     Exemplo:"
-    echo "       $0 v7.6.0-minc14 => gerará versão identificada como v7.6.0-minc14"
-    echo "  <versao_candidata> indentificador da versão candidata a próxima publicação."
+    echo "       $0 v7.6.0-minc14 => gerarÃ¡ versÃ£o identificada como v7.6.0-minc14"
+    echo "  <versao_candidata> indentificador da versÃ£o candidata a prÃ³xima publicaÃ§Ã£o."
     echo "     Exemplo:"
-    echo "       $0 v7.6.0-minc15-RC => gerará versão identificada como v7.6.0-minc15-RC"
+    echo "       $0 v7.6.0-minc15-RC => gerarÃ¡ versÃ£o identificada como v7.6.0-minc15-RC"
 }
 
-# Verificações
+# VerificaÃ§Ãµes
 ENV_ERROR=0
 if [[ -z "$COMMIT_MSG_NEW_VERSION" ]]; then
     (( ENV_ERROR++ ))
     echo "#ENV_ERROR_$ENV_ERROR"
-    echo "  Este script requer a variável de ambiente \$COMMIT_MSG_NEW_VERSION definida."
-    echo "  Essa variável deve conter a mensagem dos commits de atualização de versão."
-    echo "  Exemplo: 'Atualiza identificador de versão'"
+    echo "  Este script requer a variÃ¡vel de ambiente \$COMMIT_MSG_NEW_VERSION definida."
+    echo "  Essa variÃ¡vel deve conter a mensagem dos commits de atualizaÃ§Ã£o de versÃ£o."
+    echo "  Exemplo: 'Atualiza identificador de versÃ£o'"
 fi
 if [ -e "$STABLE_BRANCH/." ]; then
     (( ENV_ERROR++ ))
     echo "#ENV_ERROR_$ENV_ERROR"
-    echo "  Este script requer a variável de ambiente \$STABLE_BRANCH definida." 
-    echo "  Essa variável deve conter o nome da branch estável que alimenta a branch de produção."
+    echo "  Este script requer a variÃ¡vel de ambiente \$STABLE_BRANCH definida." 
+    echo "  Essa variÃ¡vel deve conter o nome da branch estÃ¡vel que alimenta a branch de produÃ§Ã£o."
     echo "  Exemplo: 'develop'"
 fi
 if [ -e "$PROD_BRANCH/." ]; then
     (( ENV_ERROR++ ))
     echo "#ENV_ERROR_$ENV_ERROR"
-    echo "  Este script requer a variável de ambiente \$PROD_BRANCH definida." 
-    echo "  Essa variável deve conter o nome da branch de produção."
+    echo "  Este script requer a variÃ¡vel de ambiente \$PROD_BRANCH definida." 
+    echo "  Essa variÃ¡vel deve conter o nome da branch de produÃ§Ã£o."
     echo "  Exemplo: 'master'"
 fi
 if [ $ENV_ERROR -gt 0 ]; then
     exit 1
 fi
 if [[ $# -ne 2 ]]; then
-    echo "Erro: quantidade parâmetros incorreta."
+    echo "Erro: quantidade parÃ¢metros incorreta."
     exibir_uso_correto
     exit 1
 fi
@@ -46,26 +46,26 @@ fi
 git rev-parse --git-dir > /dev/null 2>&1;
 if [[ $? -ne 0 || ! -f "version.txt" ]];
 then
-    echo "Este script precisa ser executado na raiz do repositório."
-    echo "Pois é lá que está o arquivo 'version.txt' que precisa ser atualizado."
+    echo "Este script precisa ser executado na raiz do repositÃ³rio."
+    echo "Pois Ã© lÃ¡ que estÃ¡ o arquivo 'version.txt' que precisa ser atualizado."
     exit 1
 fi
 
-# Início das operações
+# InÃ­cio das operaÃ§Ãµes
 
-# Posiciona-se no commit mais recente da branch estável
+# Posiciona-se no commit mais recente da branch estÃ¡vel
 
 git switch $STABLE_BRANCH
 git pull
 
-# Efetua ajustes da nova versão
+# Efetua ajustes da nova versÃ£o
 
 git checkout -b release/$1
 echo $1 > version.txt
 git add version.txt
 git commit -m "$COMMIT_MSG_NEW_VERSION"
 
-# Incorpora a branch estável à branch de produção
+# Incorpora a branch estÃ¡vel Ã  branch de produÃ§Ã£o
 
 git switch $PROD_BRANCH
 git pull
@@ -74,7 +74,7 @@ git push
 git tag $1
 git push origin $1
 
-# Atualizar elementos relativos ao próximo release
+# Atualizar elementos relativos ao prÃ³ximo release
 
 git switch $STABLE_BRANCH
 git pull

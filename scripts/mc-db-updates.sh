@@ -46,7 +46,7 @@ case $i in
     	    echo "
 	mc-db-updates.sh [-p=8] [-n='recreate pcache'] [-d=dominio.da.app.saas.gov.br]
 
-	-p=  | --processes=  numero de processos (padrão é o número de cores)
+	-p=  | --processes=  numero de processos (padrÃ£o Ã© o nÃºmero de cores)
 	-n=  | --name=       o nome do db-update que deve rodar
 "
     	    exit
