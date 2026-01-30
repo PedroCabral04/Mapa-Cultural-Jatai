@@ -16,10 +16,10 @@ return [
 
     ex: `https://mapacultural.com.br/`
     */
-    'base.url' => env('BASE_URL', ''),
+    'base.url' => env('BASE_URL', 'https://mapacultural.jatai.go.gov.br/'),
 
     /* Nome do site. É utilizado para a formação dos títulos das páginas. */
-    'app.siteName' => env('SITE_NAME', i::__('Mapas Culturais')),
+    'app.siteName' => env('SITE_NAME', i::__('Mapa Cultural Jataí')),
 
     /* Breve descrição do site. É utilizado como texto de compartilhamento da página principal do site. */
     'app.siteDescription' => env('SITE_DESCRIPTION', i::__('O Mapas Culturais é uma plataforma livre para mapeamento cultural.')),

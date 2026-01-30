@@ -22,6 +22,11 @@ services:
       - ./config:/var/www/config
       - ./public:/var/www/html
       - ./scripts:/var/www/scripts
+      - ./plugins:/var/www/plugins
+      - ./plugins/MultipleLocalAuth:/var/www/src/plugins/MultipleLocalAuth
+      - ./plugins/AdminLoginAsUser:/var/www/src/plugins/AdminLoginAsUser
+      - ./plugins/MetadataKeyword:/var/www/src/plugins/MetadataKeyword
+      - ./src:/var/www/src
       - ./var:/var/www/var
 
       # timezone

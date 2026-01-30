@@ -25,6 +25,9 @@ services:
       - ../public:/var/www/html
       - ../scripts:/var/www/scripts
       - ../src:/var/www/src
+      - ../plugins/MultipleLocalAuth:/var/www/src/plugins/MultipleLocalAuth
+      - ../plugins/AdminLoginAsUser:/var/www/src/plugins/AdminLoginAsUser
+      - ../plugins/MetadataKeyword:/var/www/src/plugins/MetadataKeyword
       - ../var:/var/www/var
 
       - ../docker/development/router.php:/var/www/router.php
