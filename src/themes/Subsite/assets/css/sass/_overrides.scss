@@ -4,8 +4,8 @@
 //## Style rules that overrides the default theme's ones.
 //## To make it easy to maintain and to avoid cascading problems,
 //## just before the new rules, document the name of the Sass partial
-//## where the original styles leave, group them per folder and keep
-//## them in the same order as the original styles are imported to the main.scss.
+// where the original styles leave, group them per folder and keep
+// them in the same order as the original styles are imported to the main.scss.
 
 //
 // application/
@@ -27,3 +27,26 @@
 // #home-developers {
 //     background: #96161A;
 // }
+
+//
+// layouts/_main-header.scss
+// Centralizar o menu no header
+.main-header__content {
+    justify-content: flex-start;
+
+    mc-header-menu {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        justify-content: center;
+    }
+
+    .mc-header-logo {
+        flex-shrink: 0;
+    }
+}
+
+.main-header__buttons {
+    flex-shrink: 0;
+    margin-left: auto;
+}

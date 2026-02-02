@@ -81,22 +81,11 @@
         display: flex;
         gap: size(30);
         height: size(90);
-        justify-content: flex-start;
+        justify-content: space-between;
         padding: 0 size(16);
         max-width: size(1440);
         width: 100%;
         margin: 0 auto;
-
-        mc-header-menu {
-            display: flex;
-            align-items: center;
-            flex: 1;
-            justify-content: center;
-        }
-
-        .mc-header-logo {
-            flex-shrink: 0;
-        }
 
         .logIn {
             align-items: center;
@@ -144,7 +133,5 @@
         align-items: center;
         display: flex;
         gap: 0 size(30);
-        flex-shrink: 0;
-        margin-left: auto;
     }
 }
