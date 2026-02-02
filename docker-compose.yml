@@ -77,6 +77,7 @@ services:
       - POSTGRES_DB=mapas
     volumes:
       - ./docker-data/postgres:/var/lib/postgresql/data
+      - ./db:/docker-entrypoint-initdb.d
 
   nginx:
     image: nginx:latest
