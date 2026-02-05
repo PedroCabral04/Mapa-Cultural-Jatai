@@ -49,43 +49,4 @@ return [
         }
     },
 
-    'add reservation metadata to space' => function () {
-        $app = \MapasCulturais\App::i();
-
-        // Registra metadados se ainda não existirem
-        $metadata = [
-            'reservation_enabled' => [
-                'label' => 'Permite reservas',
-                'type' => 'boolean',
-                'default' => false,
-            ],
-            'reservation_instructions' => [
-                'label' => 'Instruções para reserva',
-                'type' => 'text',
-            ],
-            'reservation_max_capacity' => [
-                'label' => 'Capacidade máxima',
-                'type' => 'integer',
-                'default' => 0,
-            ],
-            'reservation_min_notice_days' => [
-                'label' => 'Dias mínimos de antecedência',
-                'type' => 'integer',
-                'default' => 2,
-            ],
-            'reservation_max_advance_days' => [
-                'label' => 'Dias máximos de antecedência',
-                'type' => 'integer',
-                'default' => 90,
-            ],
-        ];
-
-        foreach ($metadata as $key => $config) {
-            try {
-                $app->registerMetadata('MapasCulturais\Entities\Space', $key, $config);
-            } catch (\Exception $e) {
-                // Metadata já existe, ignora
-            }
-        }
-    },
 ];
