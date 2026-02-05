@@ -52,42 +52,34 @@ class Plugin extends \MapasCulturais\Plugin
         $app->registerController('spaceReservation', Controller::class);
 
         // Registra metadados no Space
-        $this->registerSpaceMetadata('MapasCulturais\Entities\Space', 'reservation_enabled', [
+        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_enabled', [
             'label' => i::__('Permite reservas'),
             'type' => 'boolean',
             'default' => false,
         ]);
 
-        $this->registerSpaceMetadata('MapasCulturais\Entities\Space', 'reservation_instructions', [
+        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_instructions', [
             'label' => i::__('Instruções para reserva'),
             'type' => 'text',
         ]);
 
-        $this->registerSpaceMetadata('MapasCulturais\Entities\Space', 'reservation_max_capacity', [
+        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_max_capacity', [
             'label' => i::__('Capacidade máxima'),
             'type' => 'integer',
             'default' => 0,
         ]);
 
-        $this->registerSpaceMetadata('MapasCulturais\Entities\Space', 'reservation_min_notice_days', [
+        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_min_notice_days', [
             'label' => i::__('Dias mínimos de antecedência'),
             'type' => 'integer',
             'default' => 2,
         ]);
 
-        $this->registerSpaceMetadata('MapasCulturais\Entities\Space', 'reservation_max_advance_days', [
+        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_max_advance_days', [
             'label' => i::__('Dias máximos de antecedência'),
             'type' => 'integer',
             'default' => 90,
         ]);
-    }
-
-    /**
-     * Helper para registrar metadados no Space
-     */
-    public function registerSpaceMetadata($entity_class, $key, $cfg)
-    {
-        return $this->registerMetadata($entity_class, $key, $cfg);
     }
 
     /**
