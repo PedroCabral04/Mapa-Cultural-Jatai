@@ -1,14 +1,15 @@
 <?php
 /**
  * Campos de configuração de reservas no formulário do espaço
- * @var \MapasCulturais\Entities\Space $entity
+ * @var \MapasCulturais\Entities\Space|null $entity
  */
 
-$enabled = $entity->reservation_enabled;
-$instructions = $entity->reservation_instructions;
-$maxCapacity = $entity->reservation_max_capacity;
-$minNotice = $entity->reservation_min_notice_days ?: 2;
-$maxAdvance = $entity->reservation_max_advance_days ?: 90;
+// Valores padrão quando criando novo espaço
+$enabled = $entity ? $entity->reservation_enabled : false;
+$instructions = $entity ? $entity->reservation_instructions : '';
+$maxCapacity = $entity ? $entity->reservation_max_capacity : 0;
+$minNotice = ($entity && $entity->reservation_min_notice_days) ? $entity->reservation_min_notice_days : 2;
+$maxAdvance = ($entity && $entity->reservation_max_advance_days) ? $entity->reservation_max_advance_days : 90;
 ?>
 <div class="space-reservation-config">
     <h3><?php \MapasCulturais\i::_e('Configurações de Reserva'); ?></h3>

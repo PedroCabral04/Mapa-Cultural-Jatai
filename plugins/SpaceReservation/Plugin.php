@@ -89,23 +89,26 @@ class Plugin extends \MapasCulturais\Plugin
     {
         $app = App::i();
 
-        // Adiciona aba "Reservas" na página do espaço
+        // Adiciona aba "Reservas" na página do espaço (single)
         $app->hook('template(space.single.tabs):end', function () {
-            if ($this->entity->reservation_enabled) {
-                $this->part('space-reservation/tab', ['entity' => $this->entity]);
+            $entity = $this->data->entity ?? null;
+            if ($entity && $entity->reservation_enabled) {
+                $this->part('space-reservation/tab', ['entity' => $entity]);
             }
         });
 
-        // Adiciona conteúdo da aba
+        // Adiciona conteúdo da aba (single)
         $app->hook('template(space.single.tab-content):end', function () {
-            if ($this->entity->reservation_enabled) {
-                $this->part('space-reservation/tab-content', ['entity' => $this->entity]);
+            $entity = $this->data->entity ?? null;
+            if ($entity && $entity->reservation_enabled) {
+                $this->part('space-reservation/tab-content', ['entity' => $entity]);
             }
         });
 
-        // Adiciona campos de configuração no formulário do espaço
-        $app->hook('template(space.edit.form):end', function () {
-            $this->part('space-reservation/space-config', ['entity' => $this->entity]);
+        // Adiciona campos de configuração no formulário de edição/criação
+        $app->hook('template(space.<<create|edit>>.tab-about):end', function () {
+            $entity = $this->data->entity ?? null;
+            $this->part('space-reservation/space-config', ['entity' => $entity]);
         });
     }
 
