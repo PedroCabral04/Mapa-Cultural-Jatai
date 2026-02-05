@@ -52,49 +52,42 @@ class Plugin extends \MapasCulturais\Plugin
         $app->registerController('spaceReservation', Controller::class);
 
         // Registra metadados no Space
-        $this->registerSpaceMetadata();
-    }
-
-    /**
-     * Registra metadados na entidade Space
-     */
-    public function registerSpaceMetadata()
-    {
-        $app = App::i();
-
-        // Habilita reservas no espaço
-        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_enabled', [
+        $this->registerSpaceMetadata('MapasCulturais\Entities\Space', 'reservation_enabled', [
             'label' => i::__('Permite reservas'),
             'type' => 'boolean',
             'default' => false,
         ]);
 
-        // Instruções para reserva
-        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_instructions', [
+        $this->registerSpaceMetadata('MapasCulturais\Entities\Space', 'reservation_instructions', [
             'label' => i::__('Instruções para reserva'),
             'type' => 'text',
         ]);
 
-        // Capacidade máxima
-        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_max_capacity', [
+        $this->registerSpaceMetadata('MapasCulturais\Entities\Space', 'reservation_max_capacity', [
             'label' => i::__('Capacidade máxima'),
             'type' => 'integer',
             'default' => 0,
         ]);
 
-        // Dias mínimos de antecedência
-        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_min_notice_days', [
+        $this->registerSpaceMetadata('MapasCulturais\Entities\Space', 'reservation_min_notice_days', [
             'label' => i::__('Dias mínimos de antecedência'),
             'type' => 'integer',
             'default' => 2,
         ]);
 
-        // Dias máximos de antecedência
-        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_max_advance_days', [
+        $this->registerSpaceMetadata('MapasCulturais\Entities\Space', 'reservation_max_advance_days', [
             'label' => i::__('Dias máximos de antecedência'),
             'type' => 'integer',
             'default' => 90,
         ]);
+    }
+
+    /**
+     * Helper para registrar metadados no Space
+     */
+    protected function registerSpaceMetadata($entity_class, $key, $cfg)
+    {
+        return $this->registerMetadata($entity_class, $key, $cfg);
     }
 
     /**
