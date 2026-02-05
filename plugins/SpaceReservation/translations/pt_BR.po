@@ -1,0 +1,215 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: SpaceReservation Plugin\n"
+"POT-Creation-Date: 2026-02-05 14:00-0300\n"
+"PO-Revision-Date: 2026-02-05 14:00-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Permite reservas"
+msgstr "Permite reservas"
+
+msgid "Instruções para reserva"
+msgstr "Instruções para reserva"
+
+msgid "Capacidade máxima"
+msgstr "Capacidade máxima"
+
+msgid "Dias mínimos de antecedência"
+msgstr "Dias mínimos de antecedência"
+
+msgid "Dias máximos de antecedência"
+msgstr "Dias máximos de antecedência"
+
+msgid "Reservas"
+msgstr "Reservas"
+
+msgid "Reservar este espaço"
+msgstr "Reservar este espaço"
+
+msgid "Instruções:"
+msgstr "Instruções:"
+
+msgid "Capacidade:"
+msgstr "Capacidade:"
+
+msgid "pessoas"
+msgstr "pessoas"
+
+msgid "Antecedência:"
+msgstr "Antecedência:"
+
+msgid "mínimo %d dias, máximo %d dias"
+msgstr "mínimo %d dias, máximo %d dias"
+
+msgid "Dom"
+msgstr "Dom"
+
+msgid "Seg"
+msgstr "Seg"
+
+msgid "Ter"
+msgstr "Ter"
+
+msgid "Qua"
+msgstr "Qua"
+
+msgid "Qui"
+msgstr "Qui"
+
+msgid "Sex"
+msgstr "Sex"
+
+msgid "Sáb"
+msgstr "Sáb"
+
+msgid "Disponível"
+msgstr "Disponível"
+
+msgid "Reservado"
+msgstr "Reservado"
+
+msgid "Parcialmente ocupado"
+msgstr "Parcialmente ocupado"
+
+msgid "Indisponível"
+msgstr "Indisponível"
+
+msgid "Você precisa ter um agente verificado para solicitar reservas."
+msgstr "Você precisa ter um agente verificado para solicitar reservas."
+
+msgid "Faça login para solicitar uma reserva."
+msgstr "Faça login para solicitar uma reserva."
+
+msgid "Solicitar Reserva"
+msgstr "Solicitar Reserva"
+
+msgid "Data:"
+msgstr "Data:"
+
+msgid "Horário de início:"
+msgstr "Horário de início:"
+
+msgid "Horário de término:"
+msgstr "Horário de término:"
+
+msgid "Número de pessoas:"
+msgstr "Número de pessoas:"
+
+msgid "Máximo: %d pessoas"
+msgstr "Máximo: %d pessoas"
+
+msgid "Finalidade do uso:"
+msgstr "Finalidade do uso:"
+
+msgid "Descreva o objetivo da reserva..."
+msgstr "Descreva o objetivo da reserva..."
+
+msgid "Requisitos especiais:"
+msgstr "Requisitos especiais:"
+
+msgid "Equipamentos, acessibilidade, etc."
+msgstr "Equipamentos, acessibilidade, etc."
+
+msgid "Cancelar"
+msgstr "Cancelar"
+
+msgid "Configurações de Reserva"
+msgstr "Configurações de Reserva"
+
+msgid "Permitir reservas neste espaço"
+msgstr "Permitir reservas neste espaço"
+
+msgid "Informe aqui instruções específicas para quem deseja reservar este espaço..."
+msgstr "Informe aqui instruções específicas para quem deseja reservar este espaço..."
+
+msgid "0 = sem limite"
+msgstr "0 = sem limite"
+
+msgid "Nova solicitação de reserva"
+msgstr "Nova solicitação de reserva"
+
+msgid "O usuário %s solicitou uma reserva para o espaço \"%s\" no dia %s das %s às %s."
+msgstr "O usuário %s solicitou uma reserva para o espaço \"%s\" no dia %s das %s às %s."
+
+msgid "Status da reserva alterado"
+msgstr "Status da reserva alterado"
+
+msgid "Sua reserva para o espaço \"%s\" no dia %s foi aprovada."
+msgstr "Sua reserva para o espaço \"%s\" no dia %s foi aprovada."
+
+msgid "Sua reserva para o espaço \"%s\" no dia %s foi rejeitada.%s"
+msgstr "Sua reserva para o espaço \"%s\" no dia %s foi rejeitada.%s"
+
+msgid "Este espaço não aceita reservas no momento."
+msgstr "Este espaço não aceita reservas no momento."
+
+msgid "O horário de término deve ser posterior ao horário de início."
+msgstr "O horário de término deve ser posterior ao horário de início."
+
+msgid "É necessário solicitar com pelo menos %d dias de antecedência."
+msgstr "É necessário solicitar com pelo menos %d dias de antecedência."
+
+msgid "Não é possível reservar com mais de %d dias de antecedência."
+msgstr "Não é possível reservar com mais de %d dias de antecedência."
+
+msgid "Este espaço comporta no máximo %d pessoas."
+msgstr "Este espaço comporta no máximo %d pessoas."
+
+msgid "Este horário já foi reservado por outro usuário."
+msgstr "Este horário já foi reservado por outro usuário."
+
+msgid "Apenas reservas pendentes podem ser aprovadas."
+msgstr "Apenas reservas pendentes podem ser aprovadas."
+
+msgid "Apenas reservas pendentes podem ser rejeitadas."
+msgstr "Apenas reservas pendentes podem ser rejeitadas."
+
+msgid "Esta reserva já foi cancelada."
+msgstr "Esta reserva já foi cancelada."
+
+msgid "Não é possível cancelar reservas já finalizadas."
+msgstr "Não é possível cancelar reservas já finalizadas."
+
+msgid "Parâmetro space_id é obrigatório"
+msgstr "Parâmetro space_id é obrigatório"
+
+msgid "Espaço não encontrado"
+msgstr "Espaço não encontrado"
+
+msgid "Autenticação necessária"
+msgstr "Autenticação necessária"
+
+msgid "Você precisa ter um agente verificado para solicitar reservas"
+msgstr "Você precisa ter um agente verificado para solicitar reservas"
+
+msgid "Espaço é obrigatório"
+msgstr "Espaço é obrigatório"
+
+msgid "Horário de início e término são obrigatórios"
+msgstr "Horário de início e término são obrigatórios"
+
+msgid "ID da reserva é obrigatório"
+msgstr "ID da reserva é obrigatório"
+
+msgid "Reserva não encontrada"
+msgstr "Reserva não encontrada"
+
+msgid "Você não tem permissão para aprovar esta reserva"
+msgstr "Você não tem permissão para aprovar esta reserva"
+
+msgid "Você não tem permissão para rejeitar esta reserva"
+msgstr "Você não tem permissão para rejeitar esta reserva"
+
+msgid "Você não tem permissão para cancelar esta reserva"
+msgstr "Você não tem permissão para cancelar esta reserva"
+
+msgid "Reserva solicitada com sucesso! Aguarde aprovação do gestor."
+msgstr "Reserva solicitada com sucesso! Aguarde aprovação do gestor."
+
+msgid "Erro ao solicitar reserva. Tente novamente."
+msgstr "Erro ao solicitar reserva. Tente novamente."
