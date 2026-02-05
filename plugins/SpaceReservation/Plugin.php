@@ -52,30 +52,30 @@ class Plugin extends \MapasCulturais\Plugin
         $app->registerController('spaceReservation', Controller::class);
 
         // Registra metadados no Space
-        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_enabled', [
+        $this->registerMetadata('MapasCulturais\Entities\Space', 'reservation_enabled', [
             'label' => i::__('Permite reservas'),
             'type' => 'boolean',
             'default' => false,
         ]);
 
-        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_instructions', [
+        $this->registerMetadata('MapasCulturais\Entities\Space', 'reservation_instructions', [
             'label' => i::__('Instruções para reserva'),
             'type' => 'text',
         ]);
 
-        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_max_capacity', [
+        $this->registerMetadata('MapasCulturais\Entities\Space', 'reservation_max_capacity', [
             'label' => i::__('Capacidade máxima'),
             'type' => 'integer',
             'default' => 0,
         ]);
 
-        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_min_notice_days', [
+        $this->registerMetadata('MapasCulturais\Entities\Space', 'reservation_min_notice_days', [
             'label' => i::__('Dias mínimos de antecedência'),
             'type' => 'integer',
             'default' => 2,
         ]);
 
-        $app->registerMetadata('MapasCulturais\Entities\Space', 'reservation_max_advance_days', [
+        $this->registerMetadata('MapasCulturais\Entities\Space', 'reservation_max_advance_days', [
             'label' => i::__('Dias máximos de antecedência'),
             'type' => 'integer',
             'default' => 90,
