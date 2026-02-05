@@ -85,7 +85,7 @@ class Plugin extends \MapasCulturais\Plugin
     /**
      * Helper para registrar metadados no Space
      */
-    protected function registerSpaceMetadata($entity_class, $key, $cfg)
+    public function registerSpaceMetadata($entity_class, $key, $cfg)
     {
         return $this->registerMetadata($entity_class, $key, $cfg);
     }
