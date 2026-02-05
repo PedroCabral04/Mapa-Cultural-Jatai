@@ -58,7 +58,7 @@ class Plugin extends \MapasCulturais\Plugin
     /**
      * Registra metadados na entidade Space
      */
-    protected function registerSpaceMetadata()
+    public function registerSpaceMetadata()
     {
         $app = App::i();
 
