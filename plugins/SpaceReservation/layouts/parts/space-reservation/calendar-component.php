@@ -111,6 +111,18 @@ $canRequest = !$user->is('guest') && $user->profile && $user->profile->status >=
                               placeholder="<?php \MapasCulturais\i::_e('Equipamentos, acessibilidade, etc.'); ?>"></textarea>
                 </div>
 
+                <div class="form-group reservation-declarations">
+                    <label class="form-check">
+                        <input type="checkbox" name="non_profit_declaration" value="1" required>
+                        <span><?php \MapasCulturais\i::_e('Declaro que o evento solicitado não possui fins lucrativos'); ?></span>
+                    </label>
+
+                    <label class="form-check">
+                        <input type="checkbox" name="terms_declaration" value="1" required>
+                        <span><?php \MapasCulturais\i::_e('Declaro, sob as penas da lei, serem verdadeiras todas as informações prestadas. Li e estou de acordo com os Termos de Reserva.'); ?></span>
+                    </label>
+                </div>
+
                 <div class="form-actions">
                     <button type="button" class="btn btn-default cancel-modal">
                         <?php \MapasCulturais\i::_e('Cancelar'); ?>

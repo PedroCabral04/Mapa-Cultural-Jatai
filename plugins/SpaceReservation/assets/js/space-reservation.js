@@ -206,13 +206,23 @@
 
         submitReservation: function() {
             const self = this;
-            const form = $('#reservation-form');
-            const formData = form.serialize();
 
             // Parse date and time
             const date = $('input[name="date"]').val();
             const startTime = $('input[name="start_time"]').val();
             const endTime = $('input[name="end_time"]').val();
+            const nonProfitDeclaration = $('input[name="non_profit_declaration"]').is(':checked');
+            const termsDeclaration = $('input[name="terms_declaration"]').is(':checked');
+
+            if (!nonProfitDeclaration) {
+                self.showMessage('Você deve aceitar a declaração de evento sem fins lucrativos.', 'error');
+                return;
+            }
+
+            if (!termsDeclaration) {
+                self.showMessage('Você deve aceitar a declaração de veracidade e os Termos de Reserva.', 'error');
+                return;
+            }
 
             const data = {
                 space_id: this.spaceId,
@@ -220,7 +230,9 @@
                 end_time: `${date}T${endTime}`,
                 purpose: $('textarea[name="purpose"]').val(),
                 num_people: $('input[name="num_people"]').val(),
-                special_requirements: $('textarea[name="special_requirements"]').val()
+                special_requirements: $('textarea[name="special_requirements"]').val(),
+                non_profit_declaration: nonProfitDeclaration,
+                terms_declaration: termsDeclaration
             };
 
             $.ajax({

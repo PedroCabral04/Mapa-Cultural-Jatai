@@ -140,6 +140,20 @@ $this->import('mc-modal mc-icon mc-loading');
                                   class="reservation-form__textarea" rows="2"
                                   placeholder="<?php i::esc_attr_e('Equipamentos, acessibilidade, etc.'); ?>"></textarea>
                     </div>
+
+                    <div class="col-12 reservation-form__declarations">
+                        <label class="reservation-form__checkbox-label">
+                            <input type="checkbox" v-model="formData.non_profit_declaration" class="reservation-form__checkbox">
+                            <span><?php i::_e('Declaro que o evento solicitado não possui fins lucrativos'); ?></span>
+                        </label>
+                        <span v-if="formErrors.non_profit_declaration" class="reservation-form__error">{{ formErrors.non_profit_declaration }}</span>
+
+                        <label class="reservation-form__checkbox-label">
+                            <input type="checkbox" v-model="formData.terms_declaration" class="reservation-form__checkbox">
+                            <span><?php i::_e('Declaro, sob as penas da lei, serem verdadeiras todas as informações prestadas. Li e estou de acordo com os Termos de Reserva.'); ?></span>
+                        </label>
+                        <span v-if="formErrors.terms_declaration" class="reservation-form__error">{{ formErrors.terms_declaration }}</span>
+                    </div>
                 </div>
             </div>
         </template>

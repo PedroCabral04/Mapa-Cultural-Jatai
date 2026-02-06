@@ -228,3 +228,15 @@ msgstr "Reserva solicitada com sucesso! Aguarde aprovação do gestor."
 
 msgid "Erro ao solicitar reserva. Tente novamente."
 msgstr "Erro ao solicitar reserva. Tente novamente."
+
+msgid "Declaro que o evento solicitado não possui fins lucrativos"
+msgstr "Declaro que o evento solicitado não possui fins lucrativos"
+
+msgid "Declaro, sob as penas da lei, serem verdadeiras todas as informações prestadas. Li e estou de acordo com os Termos de Reserva."
+msgstr "Declaro, sob as penas da lei, serem verdadeiras todas as informações prestadas. Li e estou de acordo com os Termos de Reserva."
+
+msgid "Você deve aceitar a declaração de evento sem fins lucrativos."
+msgstr "Você deve aceitar a declaração de evento sem fins lucrativos."
+
+msgid "Você deve aceitar a declaração de veracidade e os Termos de Reserva."
+msgstr "Você deve aceitar a declaração de veracidade e os Termos de Reserva."

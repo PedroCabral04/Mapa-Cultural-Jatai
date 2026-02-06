@@ -38,6 +38,8 @@ app.component('space-reservation-calendar', {
                 purpose: '',
                 num_people: null,
                 special_requirements: '',
+                non_profit_declaration: false,
+                terms_declaration: false,
             },
             submitting: false,
             formErrors: {},
@@ -197,6 +199,8 @@ app.component('space-reservation-calendar', {
                 purpose: '',
                 num_people: null,
                 special_requirements: '',
+                non_profit_declaration: false,
+                terms_declaration: false,
             };
             this.formErrors = {};
         },
@@ -227,6 +231,16 @@ app.component('space-reservation-calendar', {
                 return;
             }
 
+            if (!this.formData.non_profit_declaration) {
+                this.formErrors.non_profit_declaration = 'Você deve aceitar a declaração de evento sem fins lucrativos.';
+                return;
+            }
+
+            if (!this.formData.terms_declaration) {
+                this.formErrors.terms_declaration = 'Você deve aceitar a declaração de veracidade e os Termos de Reserva.';
+                return;
+            }
+
             this.submitting = true;
 
             const startDateTime = `${this.selectedDate}T${this.formData.start_time}:00`;
@@ -239,6 +253,8 @@ app.component('space-reservation-calendar', {
                 purpose: this.formData.purpose,
                 num_people: this.formData.num_people || null,
                 special_requirements: this.formData.special_requirements || '',
+                non_profit_declaration: this.formData.non_profit_declaration,
+                terms_declaration: this.formData.terms_declaration,
             };
 
             try {

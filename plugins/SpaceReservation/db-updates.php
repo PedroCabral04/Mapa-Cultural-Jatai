@@ -1,6 +1,7 @@
 <?php
 
 use function MapasCulturais\__exec;
+use function MapasCulturais\__column_exists;
 use function MapasCulturais\__table_exists;
 
 return [
@@ -52,5 +53,15 @@ return [
     'add reservation metadata to space' => function () {
         // Metadados são registrados automaticamente pelo Plugin::register()
         // Esta migração é mantida apenas para não re-executar em ambientes onde já rodou
+    },
+
+    'add declaration fields to space_reservation' => function () {
+        if (!__column_exists('space_reservation', 'non_profit_declaration')) {
+            __exec("ALTER TABLE space_reservation ADD COLUMN non_profit_declaration BOOLEAN NOT NULL DEFAULT false");
+        }
+
+        if (!__column_exists('space_reservation', 'terms_declaration')) {
+            __exec("ALTER TABLE space_reservation ADD COLUMN terms_declaration BOOLEAN NOT NULL DEFAULT false");
+        }
     },
 ];

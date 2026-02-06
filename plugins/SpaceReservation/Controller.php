@@ -266,6 +266,16 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             return;
         }
 
+        if (!$this->parseDeclarationAccepted($data['non_profit_declaration'] ?? null)) {
+            $this->errorJson(i::__('Você deve aceitar a declaração de evento sem fins lucrativos.'), 400);
+            return;
+        }
+
+        if (!$this->parseDeclarationAccepted($data['terms_declaration'] ?? null)) {
+            $this->errorJson(i::__('Você deve aceitar a declaração de veracidade e os Termos de Reserva.'), 400);
+            return;
+        }
+
         $space = $app->repo('Space')->find($data['space_id']);
         if (!$space) {
             $this->errorJson(i::__('Espaço não encontrado'), 404);
@@ -285,6 +295,8 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             $reservation->setPurpose($data['purpose'] ?? '');
             $reservation->setNumPeople($data['num_people'] ?? null);
             $reservation->setSpecialRequirements($data['special_requirements'] ?? '');
+            $reservation->setNonProfitDeclaration($this->parseDeclarationAccepted($data['non_profit_declaration'] ?? null));
+            $reservation->setTermsDeclaration($this->parseDeclarationAccepted($data['terms_declaration'] ?? null));
 
             $reservation->save(true);
             $this->notifyManagersAboutNewReservation($reservation);
@@ -445,6 +457,8 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             'purpose' => $reservation->getPurpose(),
             'num_people' => $reservation->getNumPeople(),
             'special_requirements' => $reservation->getSpecialRequirements(),
+            'non_profit_declaration' => $reservation->getNonProfitDeclaration(),
+            'terms_declaration' => $reservation->getTermsDeclaration(),
             'rejection_reason' => $reservation->getRejectionReason(),
             'created_at' => $reservation->getCreatedAt()->format('c'),
         ];
@@ -538,6 +552,23 @@ class Controller extends \MapasCulturais\Controllers\EntityController
         $notification->user = $requester->user;
         $notification->message = sprintf('%s <a href="%s" rel="noopener noreferrer">Abrir espaço</a>', $message, $space->getSingleUrl());
         $notification->save(true);
+    }
+
+    protected function parseDeclarationAccepted($value)
+    {
+        if (is_bool($value)) {
+            return $value;
+        }
+
+        if (is_numeric($value)) {
+            return (int) $value === 1;
+        }
+
+        if (is_string($value)) {
+            return in_array(strtolower(trim($value)), ['1', 'true', 'on', 'yes'], true);
+        }
+
+        return false;
     }
 
 }

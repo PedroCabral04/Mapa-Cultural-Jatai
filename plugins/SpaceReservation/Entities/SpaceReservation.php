@@ -78,6 +78,18 @@ class SpaceReservation extends \MapasCulturais\Entity
     protected $rejectionReason;
 
     /**
+     * @var boolean
+     * @ORM\Column(name="non_profit_declaration", type="boolean", nullable=false, options={"default": false})
+     */
+    protected $nonProfitDeclaration = false;
+
+    /**
+     * @var boolean
+     * @ORM\Column(name="terms_declaration", type="boolean", nullable=false, options={"default": false})
+     */
+    protected $termsDeclaration = false;
+
+    /**
      * @var \DateTime
      * @ORM\Column(name="created_at", type="datetime", nullable=false)
      */
@@ -162,6 +174,14 @@ class SpaceReservation extends \MapasCulturais\Entity
             if ($this->numPeople > $this->space->reservation_max_capacity) {
                 throw new \Exception(vsprintf(\MapasCulturais\i::__('Este espaço comporta no máximo %d pessoas.'), [$this->space->reservation_max_capacity]));
             }
+        }
+
+        if (!$this->nonProfitDeclaration) {
+            throw new \Exception(\MapasCulturais\i::__('Você deve aceitar a declaração de evento sem fins lucrativos.'));
+        }
+
+        if (!$this->termsDeclaration) {
+            throw new \Exception(\MapasCulturais\i::__('Você deve aceitar a declaração de veracidade e os Termos de Reserva.'));
         }
 
         // Verifica conflito de horário com reservas aprovadas
@@ -319,6 +339,8 @@ class SpaceReservation extends \MapasCulturais\Entity
     public function getNumPeople() { return $this->numPeople; }
     public function getSpecialRequirements() { return $this->specialRequirements; }
     public function getRejectionReason() { return $this->rejectionReason; }
+    public function getNonProfitDeclaration() { return $this->nonProfitDeclaration; }
+    public function getTermsDeclaration() { return $this->termsDeclaration; }
     public function getCreatedAt() { return $this->createdAt; }
     public function getUpdatedAt() { return $this->updatedAt; }
 
@@ -330,4 +352,6 @@ class SpaceReservation extends \MapasCulturais\Entity
     public function setPurpose($purpose) { $this->purpose = $purpose; }
     public function setNumPeople($numPeople) { $this->numPeople = $numPeople; }
     public function setSpecialRequirements($requirements) { $this->specialRequirements = $requirements; }
+    public function setNonProfitDeclaration($accepted) { $this->nonProfitDeclaration = (bool) $accepted; }
+    public function setTermsDeclaration($accepted) { $this->termsDeclaration = (bool) $accepted; }
 }
