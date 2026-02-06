@@ -124,6 +124,9 @@ msgstr "Configurações de Reserva"
 msgid "Permitir reservas neste espaço"
 msgstr "Permitir reservas neste espaço"
 
+msgid "Aceita reservas"
+msgstr "Aceita reservas"
+
 msgid "Permitir mais de uma reserva ao mesmo tempo?"
 msgstr "Permitir mais de uma reserva ao mesmo tempo?"
 

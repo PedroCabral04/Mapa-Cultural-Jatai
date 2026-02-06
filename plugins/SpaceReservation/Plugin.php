@@ -126,6 +126,50 @@ class Plugin extends \MapasCulturais\Plugin
             $this->part('space-reservation/space-config');
         });
 
+        // Página de busca de espaços - adiciona filtro para espaços com reserva habilitada
+        $app->hook('template(search.spaces.search-filter-space):end', function () {
+            ?>
+            <label class="js-space-reservation-filter-reservable">
+                <input
+                    v-model="pseudoQuery['reservation_enabled']"
+                    true-value="1"
+                    :false-value="undefined"
+                    type="checkbox"
+                >
+                <?php i::_e('Aceita reservas') ?>
+            </label>
+            <?php
+        });
+
+        // Página de busca de espaços - reposiciona checkbox junto aos demais status
+        $app->hook('template(search.spaces.body):end', function () {
+            ?>
+            <script>
+                (function () {
+                    function moveReservableFilter() {
+                        document.querySelectorAll('.js-space-reservation-filter-reservable').forEach(function (label) {
+                            var form = label.closest('form');
+                            var statusContainer = form ? form.querySelector('.search-filter__filter-space-status') : null;
+
+                            if (statusContainer && !statusContainer.contains(label)) {
+                                statusContainer.appendChild(label);
+                            }
+                        });
+                    }
+
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', moveReservableFilter);
+                    } else {
+                        moveReservableFilter();
+                    }
+
+                    var observer = new MutationObserver(moveReservableFilter);
+                    observer.observe(document.body, { childList: true, subtree: true });
+                })();
+            </script>
+            <?php
+        });
+
         // BaseV2 - Modal de criação de espaço
         // O checkbox é adicionado via override do template create-space 
         // (components/create-space/template.php neste plugin)
