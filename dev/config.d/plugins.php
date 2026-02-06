@@ -23,5 +23,8 @@ return [
 	 			},
 	 		]
 	 	],
-	 ]
-];
+		'SpaceReservation' => [
+			'namespace' => 'SpaceReservation',
+			'config' => ['enabled' => true]
+	 	],
+]];

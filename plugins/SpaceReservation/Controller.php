@@ -84,6 +84,11 @@ class Controller extends \MapasCulturais\Controllers\EntityController
         ]);
     }
 
+    public function API_availability()
+    {
+        $this->GET_availability();
+    }
+
     /**
      * Lista reservas do usuário logado
      *
@@ -125,6 +130,16 @@ class Controller extends \MapasCulturais\Controllers\EntityController
         $this->json($result);
     }
 
+    public function API_index()
+    {
+        if (strtoupper(App::i()->request->getMethod()) === 'POST') {
+            $this->POST_index($this->data);
+            return;
+        }
+
+        $this->GET_index();
+    }
+
     /**
      * Lista reservas dos espaços gerenciados pelo usuário
      *
@@ -140,34 +155,49 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             return;
         }
 
-        // Busca espaços que o usuário controla
-        $spaces = $app->repo('Space')->findBy(['owner' => $user->profile]);
-
-        if (empty($spaces)) {
-            $this->json([]);
-            return;
-        }
-
         $qb = $app->em->createQueryBuilder();
         $qb->select('r')
             ->from('SpaceReservation\Entities\SpaceReservation', 'r')
-            ->where('r.space IN (:spaces)')
-            ->setParameter('spaces', $spaces)
             ->orderBy('r.createdAt', 'DESC');
+
+        $spaceId = $this->data['space_id'] ?? null;
+        $isAdmin = $user->is('admin');
+
+        if ($spaceId) {
+            $space = $app->repo('Space')->find($spaceId);
+
+            if (!$space) {
+                $this->errorJson(i::__('Espaço não encontrado'), 404);
+                return;
+            }
+
+            if (!$isAdmin && !$space->canUser('@control', $user)) {
+                $this->errorJson(i::__('Você não tem permissão para gerenciar reservas deste espaço'), 403);
+                return;
+            }
+
+            $qb->where('r.space = :space')
+               ->setParameter('space', $space);
+        } else {
+            if ($isAdmin) {
+                $qb->where('1 = 1');
+            } else {
+            $spaces = $app->repo('Space')->findBy(['owner' => $user->profile]);
+
+            if (empty($spaces)) {
+                $this->json([]);
+                return;
+            }
+
+            $qb->where('r.space IN (:spaces)')
+               ->setParameter('spaces', $spaces);
+            }
+        }
 
         // Filtro por status
         if (isset($this->data['status'])) {
             $qb->andWhere('r.status = :status')
                ->setParameter('status', $this->data['status']);
-        }
-
-        // Filtro por espaço específico
-        if (isset($this->data['space_id'])) {
-            $space = $app->repo('Space')->find($this->data['space_id']);
-            if ($space && in_array($space, $spaces)) {
-                $qb->andWhere('r.space = :space')
-                   ->setParameter('space', $space);
-            }
         }
 
         $reservations = $qb->getQuery()->getResult();
@@ -180,12 +210,17 @@ class Controller extends \MapasCulturais\Controllers\EntityController
         $this->json($result);
     }
 
+    public function API_manage()
+    {
+        $this->GET_manage();
+    }
+
     /**
      * Cria nova reserva
      *
      * POST /api/space-reservation
      */
-    public function POST_index()
+    public function POST_index($data = null)
     {
         $app = App::i();
         $user = $app->user;
@@ -202,7 +237,9 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             return;
         }
 
-        $data = $this->data;
+        if (is_null($data)) {
+            $data = $this->data;
+        }
 
         // Valida campos obrigatórios
         if (empty($data['space_id'])) {
@@ -233,10 +270,13 @@ class Controller extends \MapasCulturais\Controllers\EntityController
 
         try {
             $reservation->save(true);
-            $this->json($this->serializeReservation($reservation), 201);
         } catch (\Exception $e) {
-            $this->errorJson($e->getMessage(), 422);
+            $message = trim((string) $e->getMessage());
+            $this->errorJson($message !== '' ? $message : i::__('Erro ao criar reserva'), 422);
+            return;
         }
+
+        $this->json($this->serializeReservation($reservation), 201);
     }
 
     /**
@@ -254,7 +294,7 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             return;
         }
 
-        $reservation = $app->repo('SpaceReservation\Entities\SpaceReservation')->find($id);
+        $reservation = $app->em->getRepository('SpaceReservation\Entities\SpaceReservation')->find($id);
         if (!$reservation) {
             $this->errorJson(i::__('Reserva não encontrada'), 404);
             return;
@@ -267,10 +307,18 @@ class Controller extends \MapasCulturais\Controllers\EntityController
 
         try {
             $reservation->approve();
-            $this->json($this->serializeReservation($reservation, true));
         } catch (\Exception $e) {
-            $this->errorJson($e->getMessage(), 422);
+            $message = trim((string) $e->getMessage());
+            $this->errorJson($message !== '' ? $message : i::__('Erro ao aprovar reserva'), 422);
+            return;
         }
+
+        $this->json($this->serializeReservation($reservation, true));
+    }
+
+    public function API_approve()
+    {
+        $this->PATCH_approve();
     }
 
     /**
@@ -288,7 +336,7 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             return;
         }
 
-        $reservation = $app->repo('SpaceReservation\Entities\SpaceReservation')->find($id);
+        $reservation = $app->em->getRepository('SpaceReservation\Entities\SpaceReservation')->find($id);
         if (!$reservation) {
             $this->errorJson(i::__('Reserva não encontrada'), 404);
             return;
@@ -303,10 +351,18 @@ class Controller extends \MapasCulturais\Controllers\EntityController
 
         try {
             $reservation->reject($reason);
-            $this->json($this->serializeReservation($reservation, true));
         } catch (\Exception $e) {
-            $this->errorJson($e->getMessage(), 422);
+            $message = trim((string) $e->getMessage());
+            $this->errorJson($message !== '' ? $message : i::__('Erro ao rejeitar reserva'), 422);
+            return;
         }
+
+        $this->json($this->serializeReservation($reservation, true));
+    }
+
+    public function API_reject()
+    {
+        $this->PATCH_reject();
     }
 
     /**
@@ -324,7 +380,7 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             return;
         }
 
-        $reservation = $app->repo('SpaceReservation\Entities\SpaceReservation')->find($id);
+        $reservation = $app->em->getRepository('SpaceReservation\Entities\SpaceReservation')->find($id);
         if (!$reservation) {
             $this->errorJson(i::__('Reserva não encontrada'), 404);
             return;
@@ -337,10 +393,18 @@ class Controller extends \MapasCulturais\Controllers\EntityController
 
         try {
             $reservation->cancel();
-            $this->json($this->serializeReservation($reservation));
         } catch (\Exception $e) {
-            $this->errorJson($e->getMessage(), 422);
+            $message = trim((string) $e->getMessage());
+            $this->errorJson($message !== '' ? $message : i::__('Erro ao cancelar reserva'), 422);
+            return;
         }
+
+        $this->json($this->serializeReservation($reservation));
+    }
+
+    public function API_cancel()
+    {
+        $this->PATCH_cancel();
     }
 
     /**
@@ -377,11 +441,4 @@ class Controller extends \MapasCulturais\Controllers\EntityController
         return $data;
     }
 
-    /**
-     * Retorna erro em formato JSON
-     */
-    protected function errorJson($message, $statusCode = 400)
-    {
-        $this->json(['error' => $message], $statusCode);
-    }
 }

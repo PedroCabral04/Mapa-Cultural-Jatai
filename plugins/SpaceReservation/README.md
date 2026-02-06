@@ -55,9 +55,17 @@ Para habilitar reservas em um espaço:
 ### Gestor do Espaço
 
 1. Recebe notificação de nova solicitação
-2. Acesse a lista de reservas do espaço
+2. Acesse o espaço e abra a aba "Gestão de Reservas"
 3. Visualize detalhes da solicitação
 4. Aprove ou rejeite com justificativa
+
+Na aba de gestão é possível filtrar por status: pendente, aprovada, rejeitada e cancelada.
+
+### Administração
+
+Administradores também podem gerenciar reservas pelo Painel de Controle em:
+
+- Administração -> Gestão de Reservas
 
 ## API Endpoints
 

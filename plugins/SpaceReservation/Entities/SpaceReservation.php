@@ -95,8 +95,9 @@ class SpaceReservation extends \MapasCulturais\Entity
     /**
      * @ORM\PrePersist
      */
-    public function prePersist()
+    public function prePersist($args = null)
     {
+        parent::prePersist($args);
         $this->createdAt = new \DateTime();
         $this->validate();
     }
@@ -104,10 +105,14 @@ class SpaceReservation extends \MapasCulturais\Entity
     /**
      * @ORM\PreUpdate
      */
-    public function preUpdate()
+    public function preUpdate($args = null)
     {
+        parent::preUpdate($args);
         $this->updatedAt = new \DateTime();
-        $this->_oldStatus = $this->getOriginal('status');
+
+        if ($this->_oldStatus === null) {
+            $this->_oldStatus = $this->status;
+        }
     }
 
     /**
@@ -164,7 +169,6 @@ class SpaceReservation extends \MapasCulturais\Entity
             ->from('SpaceReservation\Entities\SpaceReservation', 'r')
             ->where('r.space = :space')
             ->andWhere('r.status = :status')
-            ->andWhere('r.id != :current_id OR :current_id IS NULL')
             ->andWhere(
                 $qb->expr()->orX(
                     // Nova reserva começa durante uma existente
@@ -186,9 +190,13 @@ class SpaceReservation extends \MapasCulturais\Entity
             )
             ->setParameter('space', $this->space)
             ->setParameter('status', 'approved')
-            ->setParameter('current_id', $this->id)
             ->setParameter('new_start', $this->startTime)
             ->setParameter('new_end', $this->endTime);
+
+        if ($this->id) {
+            $qb->andWhere('r.id != :current_id')
+               ->setParameter('current_id', $this->id);
+        }
 
         $conflicts = $qb->getQuery()->getResult();
 
@@ -206,6 +214,7 @@ class SpaceReservation extends \MapasCulturais\Entity
             throw new \Exception(\MapasCulturais\i::__('Apenas reservas pendentes podem ser aprovadas.'));
         }
 
+        $this->_oldStatus = $this->status;
         $this->status = 'approved';
         $this->save(true);
     }
@@ -219,6 +228,7 @@ class SpaceReservation extends \MapasCulturais\Entity
             throw new \Exception(\MapasCulturais\i::__('Apenas reservas pendentes podem ser rejeitadas.'));
         }
 
+        $this->_oldStatus = $this->status;
         $this->status = 'rejected';
         $this->rejectionReason = $reason;
         $this->save(true);
@@ -238,6 +248,7 @@ class SpaceReservation extends \MapasCulturais\Entity
             throw new \Exception(\MapasCulturais\i::__('Não é possível cancelar reservas já finalizadas.'));
         }
 
+        $this->_oldStatus = $this->status;
         $this->status = 'cancelled';
         $this->save(true);
     }

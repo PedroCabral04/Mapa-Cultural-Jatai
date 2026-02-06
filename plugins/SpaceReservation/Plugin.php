@@ -3,6 +3,8 @@
 namespace SpaceReservation;
 
 use MapasCulturais\App;
+use MapasCulturais\Entities\Notification;
+use MapasCulturais\Exceptions\PermissionDenied;
 use MapasCulturais\i;
 
 class Plugin extends \MapasCulturais\Plugin
@@ -22,60 +24,68 @@ class Plugin extends \MapasCulturais\Plugin
 
         // Registra hooks de permissão
         $this->registerPermissionHooks();
+
+        // Registra opções no painel administrativo
+        $this->registerPanelHooks();
     }
 
     /**
      * Registra assets CSS e JS
+     * 
+     * Nota: Os assets dos componentes Vue (script.js, style.css) são
+     * carregados automaticamente pelo sistema de componentes via $this->import()
      */
     protected function registerAssets()
     {
-        $app = App::i();
-
-        // Registra CSS
-        $app->hook('template(space.single):after', function () {
-            $app = App::i();
-            $app->view->enqueueStyle('app', 'space-reservation-css', 'css/space-reservation.css');
-        });
-
-        // Registra JS
-        $app->hook('template(space.single):after', function () {
-            $app = App::i();
-            $app->view->enqueueScript('app', 'space-reservation-js', 'js/space-reservation.js', ['jquery']);
-        });
+        // Assets são gerenciados automaticamente pelo sistema de componentes BaseV2
     }
 
     public function register()
     {
         $app = App::i();
 
-        // Registra controller da API
+        // Registra controller da API (rota canônica e alias para compatibilidade)
+        $app->registerController('space-reservation', Controller::class);
         $app->registerController('spaceReservation', Controller::class);
 
         // Registra metadados no Space
-        $this->registerMetadata('MapasCulturais\Entities\Space', 'reservation_enabled', [
-            'label' => i::__('Permite reservas'),
-            'type' => 'boolean',
+        $this->registerSpaceMetadataFields();
+    }
+
+    /**
+     * Registra metadados na entidade Space
+     */
+    protected function registerSpaceMetadataFields()
+    {
+        // Habilita reservas no espaço
+        $this->registerSpaceMetadata('reservation_enabled', [
+            'label' => i::__('Permitir reservas neste espaço'),
+            'type' => 'checkbox',
             'default' => false,
         ]);
 
-        $this->registerMetadata('MapasCulturais\Entities\Space', 'reservation_instructions', [
+        // Instruções para reserva
+        $this->registerSpaceMetadata('reservation_instructions', [
             'label' => i::__('Instruções para reserva'),
             'type' => 'text',
         ]);
 
-        $this->registerMetadata('MapasCulturais\Entities\Space', 'reservation_max_capacity', [
+        // Capacidade máxima
+        $this->registerSpaceMetadata('reservation_max_capacity', [
             'label' => i::__('Capacidade máxima'),
             'type' => 'integer',
             'default' => 0,
         ]);
 
-        $this->registerMetadata('MapasCulturais\Entities\Space', 'reservation_min_notice_days', [
+        // Dias mínimos de antecedência
+        $this->registerSpaceMetadata('reservation_min_notice_days', [
             'label' => i::__('Dias mínimos de antecedência'),
             'type' => 'integer',
             'default' => 2,
         ]);
 
-        $this->registerMetadata('MapasCulturais\Entities\Space', 'reservation_max_advance_days', [
+        // Dias máximos de antecedência
+        $this->registerSpaceMetadata('reservation_max_advance_days', [
             'label' => i::__('Dias máximos de antecedência'),
             'type' => 'integer',
             'default' => 90,
@@ -89,27 +99,25 @@ class Plugin extends \MapasCulturais\Plugin
     {
         $app = App::i();
 
-        // Adiciona aba "Reservas" na página do espaço (single)
+        // BaseV2 - Página single do espaço - Adiciona aba de reservas
+        // O hook template(space.single.tabs):end é chamado dentro de <mc-tabs>
+        // A entidade é uma variável Vue reativa, então usamos v-if no template
+        // O import do space-reservation-calendar é feito dentro de tab.php
         $app->hook('template(space.single.tabs):end', function () {
-            $entity = $this->data->entity ?? null;
-            if ($entity && $entity->reservation_enabled) {
-                $this->part('space-reservation/tab', ['entity' => $entity]);
-            }
+            $this->import('mc-tab mc-container');
+            $this->part('space-reservation/tab');
         });
 
-        // Adiciona conteúdo da aba (single)
-        $app->hook('template(space.single.tab-content):end', function () {
-            $entity = $this->data->entity ?? null;
-            if ($entity && $entity->reservation_enabled) {
-                $this->part('space-reservation/tab-content', ['entity' => $entity]);
-            }
+        // BaseV2 - Página de edição do espaço - Adiciona aba de configuração de reservas
+        // O hook template(space.edit.tabs):end é chamado dentro de <mc-tabs>
+        $app->hook('template(space.edit.tabs):end', function () {
+            $this->import('mc-tab mc-container mc-card entity-field');
+            $this->part('space-reservation/space-config');
         });
 
-        // Adiciona campos de configuração no formulário de edição/criação
-        $app->hook('template(space.<<create|edit>>.tab-about):end', function () {
-            $entity = $this->data->entity ?? null;
-            $this->part('space-reservation/space-config', ['entity' => $entity]);
-        });
+        // BaseV2 - Modal de criação de espaço
+        // O checkbox é adicionado via override do template create-space 
+        // (components/create-space/template.php neste plugin)
     }
 
     /**
@@ -124,18 +132,24 @@ class Plugin extends \MapasCulturais\Plugin
             $space = $this->space;
             $requester = $this->requester;
 
-            // Notifica o gestor do espaço
-            $space->owner->notify(
-                i::__('Nova solicitação de reserva'),
-                vsprintf(i::__('O usuário %s solicitou uma reserva para o espaço "%s" no dia %s das %s às %s.'), [
-                    $requester->name,
-                    $space->name,
-                    $this->startTime->format('d/m/Y'),
-                    $this->startTime->format('H:i'),
-                    $this->endTime->format('H:i')
-                ]),
-                $space->getSingleUrl()
-            );
+            $ownerUser = $space && $space->owner ? $space->owner->user : null;
+            if (!$ownerUser) {
+                return;
+            }
+
+            $message = vsprintf(i::__('O usuário %s solicitou uma reserva para o espaço "%s" no dia %s das %s às %s. <a href="%s" rel="noopener noreferrer">Abrir espaço</a>'), [
+                $requester->name,
+                $space->name,
+                $this->startTime->format('d/m/Y'),
+                $this->startTime->format('H:i'),
+                $this->endTime->format('H:i'),
+                $space->getSingleUrl(),
+            ]);
+
+            $notification = new Notification();
+            $notification->user = $ownerUser;
+            $notification->message = $message;
+            $notification->save(true);
         });
 
         // Notifica solicitante quando status muda
@@ -159,12 +173,11 @@ class Plugin extends \MapasCulturais\Plugin
                     ]);
                 }
 
-                if ($message) {
-                    $requester->notify(
-                        i::__('Status da reserva alterado'),
-                        $message,
-                        $space->getSingleUrl()
-                    );
+                if ($message && $requester && $requester->user) {
+                    $notification = new Notification();
+                    $notification->user = $requester->user;
+                    $notification->message = sprintf('%s <a href="%s" rel="noopener noreferrer">Abrir espaço</a>', $message, $space->getSingleUrl());
+                    $notification->save(true);
                 }
             }
         });
@@ -179,15 +192,42 @@ class Plugin extends \MapasCulturais\Plugin
 
         // Permissões customizadas para reservas
         $app->hook('entity(SpaceReservation\Entities\SpaceReservation).canUser(approve)', function ($user, &$result) {
-            $result = $this->space->canUser('@control', $user);
+            $result = $user->is('admin') || $this->space->canUser('@control', $user);
         });
 
         $app->hook('entity(SpaceReservation\Entities\SpaceReservation).canUser(reject)', function ($user, &$result) {
-            $result = $this->space->canUser('@control', $user);
+            $result = $user->is('admin') || $this->space->canUser('@control', $user);
         });
 
         $app->hook('entity(SpaceReservation\Entities\SpaceReservation).canUser(cancel)', function ($user, &$result) {
             $result = $this->requester->user->id === $user->id && $this->status !== 'cancelled';
+        });
+    }
+
+    protected function registerPanelHooks()
+    {
+        $app = App::i();
+
+        $app->hook('panel.nav', function (&$group) use ($app) {
+            $group['admin']['items'][] = [
+                'route' => 'panel/space-reservations',
+                'icon' => 'event',
+                'label' => i::__('Gestão de Reservas'),
+                'condition' => function () use ($app) {
+                    return $app->user->is('admin');
+                },
+            ];
+        });
+
+        $app->hook('GET(panel.space-reservations)', function () use ($app) {
+            /** @var \MapasCulturais\Controllers\Panel $this */
+            $this->requireAuthentication();
+
+            if (!$app->user->is('admin')) {
+                throw new PermissionDenied($app->user, null, i::__('Gerenciar Reservas'));
+            }
+
+            $this->render('space-reservations');
         });
     }
 }

@@ -49,4 +49,8 @@ return [
         }
     },
 
+    'add reservation metadata to space' => function () {
+        // Metadados são registrados automaticamente pelo Plugin::register()
+        // Esta migração é mantida apenas para não re-executar em ambientes onde já rodou
+    },
 ];
