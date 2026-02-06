@@ -154,31 +154,29 @@ class Plugin extends \MapasCulturais\Plugin
 
         // Notifica solicitante quando status muda
         $app->hook('entity(SpaceReservation\Entities\SpaceReservation).update:after', function () use ($app) {
-            if ($this->status !== $this->_oldStatus) {
-                $space = $this->space;
-                $requester = $this->requester;
+            $space = $this->space;
+            $requester = $this->requester;
 
-                $message = '';
-                if ($this->status === 'approved') {
-                    $message = vsprintf(i::__('Sua reserva para o espaço "%s" no dia %s foi aprovada.'), [
-                        $space->name,
-                        $this->startTime->format('d/m/Y')
-                    ]);
-                } elseif ($this->status === 'rejected') {
-                    $reason = $this->rejectionReason ? ' Motivo: ' . $this->rejectionReason : '';
-                    $message = vsprintf(i::__('Sua reserva para o espaço "%s" no dia %s foi rejeitada.%s'), [
-                        $space->name,
-                        $this->startTime->format('d/m/Y'),
-                        $reason
-                    ]);
-                }
+            $message = '';
+            if ($this->statusChangedTo('approved')) {
+                $message = vsprintf(i::__('Sua reserva para o espaço "%s" no dia %s foi aprovada.'), [
+                    $space->name,
+                    $this->startTime->format('d/m/Y')
+                ]);
+            } elseif ($this->statusChangedTo('rejected')) {
+                $reason = $this->rejectionReason ? ' Motivo: ' . $this->rejectionReason : '';
+                $message = vsprintf(i::__('Sua reserva para o espaço "%s" no dia %s foi rejeitada.%s'), [
+                    $space->name,
+                    $this->startTime->format('d/m/Y'),
+                    $reason
+                ]);
+            }
 
-                if ($message && $requester && $requester->user) {
-                    $notification = new Notification();
-                    $notification->user = $requester->user;
-                    $notification->message = sprintf('%s <a href="%s" rel="noopener noreferrer">Abrir espaço</a>', $message, $space->getSingleUrl());
-                    $notification->save(true);
-                }
+            if ($message && $requester && $requester->user) {
+                $notification = new Notification();
+                $notification->user = $requester->user;
+                $notification->message = sprintf('%s <a href="%s" rel="noopener noreferrer">Abrir espaço</a>', $message, $space->getSingleUrl());
+                $notification->save(true);
             }
         });
     }

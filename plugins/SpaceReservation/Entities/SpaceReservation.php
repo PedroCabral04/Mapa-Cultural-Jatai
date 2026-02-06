@@ -99,7 +99,16 @@ class SpaceReservation extends \MapasCulturais\Entity
     {
         parent::prePersist($args);
         $this->createdAt = new \DateTime();
+        $this->_oldStatus = $this->status;
         $this->validate();
+    }
+
+    /**
+     * @ORM\PostLoad
+     */
+    public function postLoad($args = null)
+    {
+        $this->_oldStatus = $this->status;
     }
 
     /**
@@ -110,7 +119,9 @@ class SpaceReservation extends \MapasCulturais\Entity
         parent::preUpdate($args);
         $this->updatedAt = new \DateTime();
 
-        if ($this->_oldStatus === null) {
+        if ($args && method_exists($args, 'hasChangedField') && $args->hasChangedField('status')) {
+            $this->_oldStatus = $args->getOldValue('status');
+        } else {
             $this->_oldStatus = $this->status;
         }
     }
