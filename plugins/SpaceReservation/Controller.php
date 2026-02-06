@@ -45,8 +45,19 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             $end = date('Y-m-d', strtotime('+1 month'));
         }
 
-        $startDate = new \DateTime($start);
-        $endDate = new \DateTime($end);
+        try {
+            $startDate = new \DateTime($start);
+            $startDate->setTime(0, 0, 0);
+
+            $endDate = new \DateTime($end);
+            $endDate->setTime(0, 0, 0);
+
+            $endExclusive = clone $endDate;
+            $endExclusive->modify('+1 day');
+        } catch (\Exception $e) {
+            $this->errorJson(i::__('Parâmetros de data inválidos'), 400);
+            return;
+        }
 
         // Busca reservas aprovadas no período
         $qb = $app->em->createQueryBuilder();
@@ -54,12 +65,12 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             ->from('SpaceReservation\Entities\SpaceReservation', 'r')
             ->where('r.space = :space')
             ->andWhere('r.status = :status')
-            ->andWhere('r.startTime >= :start')
-            ->andWhere('r.startTime <= :end')
+            ->andWhere('r.startTime < :end_exclusive')
+            ->andWhere('r.endTime > :start')
             ->setParameter('space', $space)
             ->setParameter('status', 'approved')
             ->setParameter('start', $startDate)
-            ->setParameter('end', $endDate)
+            ->setParameter('end_exclusive', $endExclusive)
             ->orderBy('r.startTime', 'ASC');
 
         $reservations = $qb->getQuery()->getResult();
@@ -259,16 +270,19 @@ class Controller extends \MapasCulturais\Controllers\EntityController
         }
 
         // Cria a reserva
-        $reservation = new SpaceReservation();
-        $reservation->setSpace($space);
-        $reservation->setRequester($agent);
-        $reservation->setStartTime(new \DateTime($data['start_time']));
-        $reservation->setEndTime(new \DateTime($data['end_time']));
-        $reservation->setPurpose($data['purpose'] ?? '');
-        $reservation->setNumPeople($data['num_people'] ?? null);
-        $reservation->setSpecialRequirements($data['special_requirements'] ?? '');
-
         try {
+            $startTime = new \DateTime($data['start_time']);
+            $endTime = new \DateTime($data['end_time']);
+
+            $reservation = new SpaceReservation();
+            $reservation->setSpace($space);
+            $reservation->setRequester($agent);
+            $reservation->setStartTime($startTime);
+            $reservation->setEndTime($endTime);
+            $reservation->setPurpose($data['purpose'] ?? '');
+            $reservation->setNumPeople($data['num_people'] ?? null);
+            $reservation->setSpecialRequirements($data['special_requirements'] ?? '');
+
             $reservation->save(true);
         } catch (\Exception $e) {
             $message = trim((string) $e->getMessage());

@@ -214,6 +214,9 @@ class SpaceReservation extends \MapasCulturais\Entity
             throw new \Exception(\MapasCulturais\i::__('Apenas reservas pendentes podem ser aprovadas.'));
         }
 
+        // Revalida conflitos no momento da aprovação para evitar dupla reserva
+        $this->checkConflicts();
+
         $this->_oldStatus = $this->status;
         $this->status = 'approved';
         $this->save(true);

@@ -94,7 +94,7 @@ app.component('space-reservation-calendar', {
                     isPast: isPast,
                     isToday: date.getTime() === today.getTime(),
                     reservations: dayReservations,
-                    status: this.getDayStatus(dayReservations, isPast),
+                    status: this.getDayStatus(dayReservations, isPast, dateStr),
                 });
             }
 
@@ -273,20 +273,32 @@ app.component('space-reservation-calendar', {
 
         // --- Helpers ---
         getReservationsForDate(dateStr) {
+            const dayStart = new Date(`${dateStr}T00:00:00`);
+            const dayEndExclusive = new Date(`${dateStr}T00:00:00`);
+            dayEndExclusive.setDate(dayEndExclusive.getDate() + 1);
+
             return this.reservations.filter(r => {
-                const rDate = r.start_time.substring(0, 10);
-                return rDate === dateStr;
+                const reservationStart = new Date(r.start_time);
+                const reservationEnd = new Date(r.end_time);
+                return reservationStart < dayEndExclusive && reservationEnd > dayStart;
             });
         },
 
-        getDayStatus(reservations, isPast) {
+        getDayStatus(reservations, isPast, dateStr) {
             if (isPast) return 'past';
             if (reservations.length === 0) return 'available';
             // If any reservation covers a full day (8+ hours), mark as occupied
             const totalHours = reservations.reduce((sum, r) => {
+                const dayStart = new Date(`${dateStr}T00:00:00`);
+                const dayEndExclusive = new Date(`${dateStr}T00:00:00`);
+                dayEndExclusive.setDate(dayEndExclusive.getDate() + 1);
                 const start = new Date(r.start_time);
                 const end = new Date(r.end_time);
-                return sum + (end - start) / 3600000;
+                const overlapStart = start > dayStart ? start : dayStart;
+                const overlapEnd = end < dayEndExclusive ? end : dayEndExclusive;
+                const overlapMs = Math.max(0, overlapEnd - overlapStart);
+
+                return sum + overlapMs / 3600000;
             }, 0);
             if (totalHours >= 8) return 'occupied';
             return 'partial';
