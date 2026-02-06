@@ -174,6 +174,7 @@ class SpaceReservation extends \MapasCulturais\Entity
     protected function checkConflicts()
     {
         $app = App::i();
+        $maxSimultaneousReservations = $this->getMaxSimultaneousReservations();
 
         $qb = $app->em->createQueryBuilder();
         $qb->select('r')
@@ -211,9 +212,26 @@ class SpaceReservation extends \MapasCulturais\Entity
 
         $conflicts = $qb->getQuery()->getResult();
 
-        if (count($conflicts) > 0) {
-            throw new \Exception(\MapasCulturais\i::__('Este horário já foi reservado por outro usuário.'));
+        if (count($conflicts) >= $maxSimultaneousReservations) {
+            throw new \Exception(vsprintf(\MapasCulturais\i::__('Este horário atingiu o limite máximo de %d reservas simultâneas.'), [$maxSimultaneousReservations]));
         }
+    }
+
+    /**
+     * Obtém o limite de reservas simultâneas para o espaço.
+     */
+    protected function getMaxSimultaneousReservations()
+    {
+        if (!$this->space) {
+            return 1;
+        }
+
+        if (!$this->space->reservation_allow_simultaneous) {
+            return 1;
+        }
+
+        $maxSimultaneous = (int) ($this->space->reservation_max_simultaneous ?? 1);
+        return max(1, $maxSimultaneous);
     }
 
     /**

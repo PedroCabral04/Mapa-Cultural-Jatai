@@ -23,6 +23,9 @@ class Plugin extends \MapasCulturais\Plugin
 
         // Registra opções no painel administrativo
         $this->registerPanelHooks();
+
+        // Registra validações de configuração
+        $this->registerValidationHooks();
     }
 
     /**
@@ -58,6 +61,18 @@ class Plugin extends \MapasCulturais\Plugin
             'label' => i::__('Permitir reservas neste espaço'),
             'type' => 'checkbox',
             'default' => false,
+        ]);
+
+        $this->registerSpaceMetadata('reservation_allow_simultaneous', [
+            'label' => i::__('Permitir mais de uma reserva ao mesmo tempo?'),
+            'type' => 'checkbox',
+            'default' => false,
+        ]);
+
+        $this->registerSpaceMetadata('reservation_max_simultaneous', [
+            'label' => i::__('Quantidade máxima de reservas simultâneas'),
+            'type' => 'integer',
+            'default' => 1,
         ]);
 
         // Instruções para reserva
@@ -222,6 +237,22 @@ class Plugin extends \MapasCulturais\Plugin
             }
 
             $this->render('space-reservations');
+        });
+    }
+
+    protected function registerValidationHooks()
+    {
+        $app = App::i();
+
+        $app->hook('entity(space).save:before', function () {
+            if (!$this->reservation_enabled || !$this->reservation_allow_simultaneous) {
+                return;
+            }
+
+            $maxSimultaneous = (int) ($this->reservation_max_simultaneous ?? 0);
+            if ($maxSimultaneous < 2) {
+                throw new \Exception(i::__('Quando permitido mais de uma reserva ao mesmo tempo, a quantidade máxima de reservas simultâneas deve ser no mínimo 2.'));
+            }
         });
     }
 }

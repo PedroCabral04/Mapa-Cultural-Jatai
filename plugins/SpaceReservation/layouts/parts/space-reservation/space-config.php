@@ -20,6 +20,8 @@ use MapasCulturais\i;
                     <entity-field :entity="entity" classes="col-12" type="checkbox" prop="reservation_enabled" label="<?php i::esc_attr_e('Permitir reservas neste espaço'); ?>"></entity-field>
                     
                     <div v-if="entity.reservation_enabled" class="col-12 grid-12">
+                        <entity-field :entity="entity" classes="col-12" type="checkbox" prop="reservation_allow_simultaneous" label="<?php i::esc_attr_e('Permitir mais de uma reserva ao mesmo tempo?'); ?>"></entity-field>
+                        <entity-field v-if="entity.reservation_allow_simultaneous" :entity="entity" classes="col-4 sm:col-12" prop="reservation_max_simultaneous" label="<?php i::esc_attr_e('Quantidade máxima de reservas simultâneas'); ?>"></entity-field>
                         <entity-field :entity="entity" classes="col-12" prop="reservation_instructions" label="<?php i::esc_attr_e('Instruções para reserva'); ?>"></entity-field>
                         <entity-field :entity="entity" classes="col-4 sm:col-12" prop="reservation_max_capacity" label="<?php i::esc_attr_e('Capacidade máxima (0 = sem limite)'); ?>"></entity-field>
                         <entity-field :entity="entity" classes="col-4 sm:col-12" prop="reservation_min_notice_days" label="<?php i::esc_attr_e('Dias mínimos de antecedência'); ?>"></entity-field>

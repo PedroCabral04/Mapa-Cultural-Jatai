@@ -24,6 +24,8 @@ $this->import('
             <entity-terms :entity="entity" hide-required :editable="true" :classes="areaClasses" taxonomy='area' title="<?php i::esc_attr_e("Área de Atuação") ?>"></entity-terms>
             <entity-field :entity="entity" hide-required prop="shortDescription" :max-length="400" label="<?php i::esc_attr_e("Adicione uma Descrição curta para o Espaço")?>"></entity-field>
             <entity-field :entity="entity" hide-required type="checkbox" prop="reservation_enabled" label="<?php i::esc_attr_e("Permitir reservas neste espaço")?>"></entity-field>
+            <entity-field v-if="entity.reservation_enabled" :entity="entity" hide-required type="checkbox" prop="reservation_allow_simultaneous" label="<?php i::esc_attr_e("Permitir mais de uma reserva ao mesmo tempo?")?>"></entity-field>
+            <entity-field v-if="entity.reservation_enabled && entity.reservation_allow_simultaneous" :entity="entity" hide-required prop="reservation_max_simultaneous" label="<?php i::esc_attr_e("Quantidade máxima de reservas simultâneas")?>"></entity-field>
         </div>
     </template>
     

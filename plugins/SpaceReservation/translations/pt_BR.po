@@ -124,6 +124,12 @@ msgstr "Configurações de Reserva"
 msgid "Permitir reservas neste espaço"
 msgstr "Permitir reservas neste espaço"
 
+msgid "Permitir mais de uma reserva ao mesmo tempo?"
+msgstr "Permitir mais de uma reserva ao mesmo tempo?"
+
+msgid "Quantidade máxima de reservas simultâneas"
+msgstr "Quantidade máxima de reservas simultâneas"
+
 msgid "Informe aqui instruções específicas para quem deseja reservar este espaço..."
 msgstr "Informe aqui instruções específicas para quem deseja reservar este espaço..."
 
@@ -162,6 +168,12 @@ msgstr "Este espaço comporta no máximo %d pessoas."
 
 msgid "Este horário já foi reservado por outro usuário."
 msgstr "Este horário já foi reservado por outro usuário."
+
+msgid "Este horário atingiu o limite máximo de %d reservas simultâneas."
+msgstr "Este horário atingiu o limite máximo de %d reservas simultâneas."
+
+msgid "Quando permitido mais de uma reserva ao mesmo tempo, a quantidade máxima de reservas simultâneas deve ser no mínimo 2."
+msgstr "Quando permitido mais de uma reserva ao mesmo tempo, a quantidade máxima de reservas simultâneas deve ser no mínimo 2."
 
 msgid "Apenas reservas pendentes podem ser aprovadas."
 msgstr "Apenas reservas pendentes podem ser aprovadas."

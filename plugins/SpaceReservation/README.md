@@ -33,6 +33,8 @@ Para habilitar reservas em um espaço:
 1. Edite o espaço
 2. Na seção "Configurações de Reserva", marque "Permitir reservas neste espaço"
 3. Configure:
+   - **Permitir mais de uma reserva ao mesmo tempo?** - Desmarcado por padrão (limite de 1 reserva por horário)
+   - **Quantidade máxima de reservas simultâneas** - Exibido apenas quando a opção acima estiver ativa (mínimo: 2)
    - **Instruções para reserva** - Informações específicas para solicitantes
    - **Capacidade máxima** - Limite de pessoas (0 = sem limite)
    - **Dias mínimos de antecedência** - Padrão: 2 dias
