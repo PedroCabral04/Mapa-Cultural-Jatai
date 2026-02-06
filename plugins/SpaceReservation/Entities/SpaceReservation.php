@@ -275,6 +275,22 @@ class SpaceReservation extends \MapasCulturais\Entity
         return $this->_oldStatus !== $this->status && $this->status === $status;
     }
 
+    //============================================================= //
+    // The following lines ara used by MapasCulturais hook system.
+    // Please do not change them.
+    // ============================================================ //
+
+    /** @ORM\PostPersist */
+    public function postPersist($args = null){ parent::postPersist($args); }
+
+    /** @ORM\PreRemove */
+    public function preRemove($args = null){ parent::preRemove($args); }
+    /** @ORM\PostRemove */
+    public function postRemove($args = null){ parent::postRemove($args); }
+
+    /** @ORM\PostUpdate */
+    public function postUpdate($args = null){ parent::postUpdate($args); }
+
     // Getters
     public function getSpace() { return $this->space; }
     public function getRequester() { return $this->requester; }

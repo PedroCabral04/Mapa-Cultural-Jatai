@@ -90,8 +90,14 @@ $this->import('mc-modal mc-icon mc-loading');
                 <div v-if="selectedDayReservations.length > 0" class="reservation-form__existing">
                     <p class="reservation-form__existing-title"><?php i::_e('Reservas já confirmadas neste dia:'); ?></p>
                     <ul class="reservation-form__existing-list">
-                        <li v-for="r in selectedDayReservations" :key="r.id">
-                            {{ formatTime(r.start_time) }} - {{ formatTime(r.end_time) }}
+                        <li v-for="r in selectedDayReservations" :key="r.id" class="reservation-form__existing-item">
+                            <div class="reservation-form__existing-info">
+                                <span class="reservation-form__existing-time">{{ formatTime(r.start_time) }} - {{ formatTime(r.end_time) }}</span>
+                                <strong class="reservation-form__existing-name" v-if="r.requester_name"> - {{ r.requester_name }}</strong>
+                            </div>
+                            <div v-if="r.purpose" class="reservation-form__existing-purpose">
+                                {{ r.purpose }}
+                            </div>
                         </li>
                     </ul>
                 </div>

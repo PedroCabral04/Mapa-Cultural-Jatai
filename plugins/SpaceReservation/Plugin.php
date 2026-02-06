@@ -3,7 +3,6 @@
 namespace SpaceReservation;
 
 use MapasCulturais\App;
-use MapasCulturais\Entities\Notification;
 use MapasCulturais\Exceptions\PermissionDenied;
 use MapasCulturais\i;
 
@@ -18,9 +17,6 @@ class Plugin extends \MapasCulturais\Plugin
 
         // Registra hooks de template para adicionar aba de reservas
         $this->registerTemplateHooks();
-
-        // Registra hooks de notificação
-        $this->registerNotificationHooks();
 
         // Registra hooks de permissão
         $this->registerPermissionHooks();

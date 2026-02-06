@@ -3,6 +3,7 @@
 namespace SpaceReservation;
 
 use MapasCulturais\App;
+use MapasCulturais\Entities\Notification;
 use MapasCulturais\i;
 use SpaceReservation\Entities\SpaceReservation;
 
@@ -82,6 +83,8 @@ class Controller extends \MapasCulturais\Controllers\EntityController
                 'start_time' => $r->getStartTime()->format('c'),
                 'end_time' => $r->getEndTime()->format('c'),
                 'status' => $r->getStatus(),
+                'purpose' => $r->getPurpose(),
+                'requester_name' => $r->getRequester()->name,
             ];
         }
 
@@ -284,6 +287,7 @@ class Controller extends \MapasCulturais\Controllers\EntityController
             $reservation->setSpecialRequirements($data['special_requirements'] ?? '');
 
             $reservation->save(true);
+            $this->notifyManagersAboutNewReservation($reservation);
         } catch (\Exception $e) {
             $message = trim((string) $e->getMessage());
             $this->errorJson($message !== '' ? $message : i::__('Erro ao criar reserva'), 422);
@@ -321,6 +325,7 @@ class Controller extends \MapasCulturais\Controllers\EntityController
 
         try {
             $reservation->approve();
+            $this->notifyRequesterAboutStatusChange($reservation);
         } catch (\Exception $e) {
             $message = trim((string) $e->getMessage());
             $this->errorJson($message !== '' ? $message : i::__('Erro ao aprovar reserva'), 422);
@@ -365,6 +370,7 @@ class Controller extends \MapasCulturais\Controllers\EntityController
 
         try {
             $reservation->reject($reason);
+            $this->notifyRequesterAboutStatusChange($reservation);
         } catch (\Exception $e) {
             $message = trim((string) $e->getMessage());
             $this->errorJson($message !== '' ? $message : i::__('Erro ao rejeitar reserva'), 422);
@@ -453,6 +459,85 @@ class Controller extends \MapasCulturais\Controllers\EntityController
         }
 
         return $data;
+    }
+
+    protected function notifyManagersAboutNewReservation(SpaceReservation $reservation)
+    {
+        $space = $reservation->getSpace();
+        $requester = $reservation->getRequester();
+
+        if (!$space || !$requester) {
+            return;
+        }
+
+        $usersById = [];
+
+        foreach ($space->getUsersWithControl() as $user) {
+            if ($user && !$user->is('guest')) {
+                $usersById[$user->id] = $user;
+            }
+        }
+
+        $subsiteId = $space->subsiteId ?? null;
+        foreach (App::i()->repo('User')->getAdmins($subsiteId) as $adminUser) {
+            if ($adminUser && !$adminUser->is('guest')) {
+                $usersById[$adminUser->id] = $adminUser;
+            }
+        }
+
+        $message = vsprintf(i::__('O usuário %s solicitou uma reserva para o espaço "%s" no dia %s das %s às %s. <a href="%s" rel="noopener noreferrer">Abrir espaço</a>'), [
+            $requester->name,
+            $space->name,
+            $reservation->getStartTime()->format('d/m/Y'),
+            $reservation->getStartTime()->format('H:i'),
+            $reservation->getEndTime()->format('H:i'),
+            $space->getSingleUrl(),
+        ]);
+
+        foreach ($usersById as $user) {
+            if ($requester->user && $user->id === $requester->user->id) {
+                continue;
+            }
+
+            $notification = new Notification();
+            $notification->user = $user;
+            $notification->message = $message;
+            $notification->save(true);
+        }
+    }
+
+    protected function notifyRequesterAboutStatusChange(SpaceReservation $reservation)
+    {
+        $space = $reservation->getSpace();
+        $requester = $reservation->getRequester();
+
+        if (!$space || !$requester || !$requester->user) {
+            return;
+        }
+
+        $message = '';
+        if ($reservation->getStatus() === 'approved') {
+            $message = vsprintf(i::__('Sua reserva para o espaço "%s" no dia %s foi aprovada.'), [
+                $space->name,
+                $reservation->getStartTime()->format('d/m/Y')
+            ]);
+        } elseif ($reservation->getStatus() === 'rejected') {
+            $reason = $reservation->getRejectionReason() ? ' Motivo: ' . $reservation->getRejectionReason() : '';
+            $message = vsprintf(i::__('Sua reserva para o espaço "%s" no dia %s foi rejeitada.%s'), [
+                $space->name,
+                $reservation->getStartTime()->format('d/m/Y'),
+                $reason
+            ]);
+        }
+
+        if ($message === '') {
+            return;
+        }
+
+        $notification = new Notification();
+        $notification->user = $requester->user;
+        $notification->message = sprintf('%s <a href="%s" rel="noopener noreferrer">Abrir espaço</a>', $message, $space->getSingleUrl());
+        $notification->save(true);
     }
 
 }
