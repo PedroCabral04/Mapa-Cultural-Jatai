@@ -1,13 +1,13 @@
 <?php
 
 return [
-    //'auth.provider' => 'Fake',
+    'auth.provider' => 'Fake',
 
-     'auth.provider' => '\MultipleLocalAuth\Provider',
-     'auth.config' => [
-         'salt' => env('AUTH_SALT', null),
-         'wizard' => env('AUTH_WIZARD_ENABLED', false),
-         'timeout' => '24 hours',
+        // 'auth.provider' => '\MultipleLocalAuth\Provider',
+        // 'auth.config' => [
+        //     'salt' => env('AUTH_SALT', null),
+        //     'wizard' => env('AUTH_WIZARD_ENABLED', false),
+        //     'timeout' => '24 hours',
         //  'strategies' => [
         //      'Facebook' => [
         //          'app_id' => env('AUTH_FACEBOOK_APP_ID', null),
@@ -50,5 +50,5 @@ return [
         //          'dic_agent_fields_update' => json_decode(env('AUTH_GOV_BR_DICT_AGENT_FIELDS_UPDATE', '{}'), true)
         //      ]
         //  ]
-     ]
+        // ]
 ];

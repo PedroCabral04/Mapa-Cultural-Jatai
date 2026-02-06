@@ -28,6 +28,7 @@ services:
       - ../plugins/MultipleLocalAuth:/var/www/src/plugins/MultipleLocalAuth
       - ../plugins/AdminLoginAsUser:/var/www/src/plugins/AdminLoginAsUser
       - ../plugins/MetadataKeyword:/var/www/src/plugins/MetadataKeyword
+      - ../plugins/SpaceReservation:/var/www/src/plugins/SpaceReservation
       - ../var:/var/www/var
 
       - ../docker/development/router.php:/var/www/router.php

@@ -1,0 +1,119 @@
+.space-reservation-management {
+    width: 100%;
+}
+
+.space-reservation-management__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.space-reservation-management__header h2 {
+    margin: 0;
+}
+
+.space-reservation-management__filter-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.875rem;
+}
+
+.space-reservation-management__filter {
+    min-width: 190px;
+    padding: 0.45rem 0.5rem;
+}
+
+.space-reservation-management__empty {
+    padding: 1rem;
+    border: 1px solid var(--mc-border-color, #ddd);
+    border-radius: 8px;
+    background: #fff;
+}
+
+.space-reservation-management__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.space-reservation-management__item {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem;
+    border: 1px solid var(--mc-border-color, #ddd);
+    border-radius: 8px;
+    background: #fff;
+}
+
+.space-reservation-management__item-main p {
+    margin: 0 0 0.4rem;
+}
+
+.space-reservation-management__item-main p:last-child {
+    margin-bottom: 0;
+}
+
+.space-reservation-management__item-side {
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+
+.space-reservation-management__status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.space-reservation-management__status--pending {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.space-reservation-management__status--approved {
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+.space-reservation-management__status--rejected,
+.space-reservation-management__status--cancelled {
+    background: #fef2f2;
+    color: #991b1b;
+}
+
+.space-reservation-management__actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .space-reservation-management__header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .space-reservation-management__filter {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .space-reservation-management__item {
+        flex-direction: column;
+    }
+
+    .space-reservation-management__item-side {
+        min-width: 0;
+        align-items: flex-start;
+    }
+}
